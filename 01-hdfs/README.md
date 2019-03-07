@@ -5,12 +5,11 @@
 
 # Laboratorio HDFS
 
-## ACTIVIDAD DE LA SEMANA
-### Realizar el tutorial presente en este documento
-### Cargar datos al HDFS vía Ambari (algunos directorios y archivos)
-### Cargar datos al HDFS vía Terminal (todos los datasets a cada usuario)
-### Extraer una tabla de la base de datos 'retail_db' vía SQOOP hacia HDFS
-### Extraer todas las tablas de la base de datos 'retail_db' vía SQOOP hacia HDFS
+## ACTIVIDAD DE LA SEMANA:
+
+### * Realizar el tutorial presente en este documento
+### * Cargar datos al HDFS vía Ambari (algunos directorios y archivos)
+### * Cargar datos al HDFS vía Terminal (todos los datasets a cada usuario)
 
 ## 1 CONECTARSE AL CLUSTER HORTONWORKS:
 
@@ -100,11 +99,7 @@ comandos:
     chown <username> files   cambiar el dueño de un archivo
     chgrp <group> files      cambiar el grupo de un archivo
 
-## 3. EXTRACCIÓN (INGESTA) DE DATOS DESDE RDBMS VIA SQOOP HACIA HDFS
-
-![MYSQL2HDFS](mysql2hdfs.md)
-
-## 4. GESTIÓN DE ARCHIVOS VÍA AMBARI WEB
+## 3. GESTIÓN DE ARCHIVOS VÍA AMBARI WEB
 
 * Login
 
