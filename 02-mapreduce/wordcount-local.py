@@ -32,7 +32,7 @@ def wordcountfile(f, wordcount):
             else:
                 wordcount[word] += 1
         file.close()
-    except IOError, UnicodeDecodeError, e:
+    except IOError, UnicodeDecodeError:
         print("skip file utf-8 error",f)            
     return wordcount        
 
