@@ -24,16 +24,22 @@ Tomado de: https://hadoop.apache.org/docs/r2.7.3/hadoop-mapreduce-client/hadoop-
 
 ### Para ejecutar:
 
->		user@master$ hadoop jar wc.jar WordCount hdfs:///datasets/gutenberg-small/*.txt hdfs:///user/<login>/result1
+>		user@master$ hadoop jar wc.jar WordCount hdfs:///datasets/gutenberg-small/*.txt hdfs:///user/<username>/result1
 
 (puede tomar varios minutos)
 
 * el comando hadoop se este abandonando por yarn:
 
->		user@master$ yarn jar wc.jar WordCount hdfs:///datasets/gutenberg-small/*.txt hdfs:///user/<login>/result2
+>		user@master$ yarn jar wc.jar WordCount hdfs:///datasets/gutenberg-small/*.txt hdfs:///user/<username>/result2
 
 
 # (2) WordCount en python
+
+* correr la versión serial / secuencial asumimiendo todos los datos locales:
+
+    $ cd 02-mapreduce
+    $ python wordcount-local.py /datasets/gutenberg-small/*.txt > salida-serial.txt
+    $ more salida-serial.txt
 
 * Hay varias librerias de python para acceder a servicios MapReduce en Hadoop
 
@@ -76,5 +82,6 @@ Ejecutar:
 
 >		user@master$ python wordcount-mr.py hdfs:///datasets/gutenberg-small/*.txt -r hadoop --output-dir hdfs:///user/<login>/result3 --hadoop-streaming-jar $HADOOP_STREAMING_HOME/hadoop-streaming.jar
 
-
 * el directorio 'result*' no puede existir)
+
+## "-D mapred.reduce.tasks=10" para especificar el nro de reducers en MRJOB

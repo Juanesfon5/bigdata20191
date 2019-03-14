@@ -1,6 +1,6 @@
 # estas variables depende de cada instalación y distribución
 #
-# para el caso de HortonWorks 2.5:
+# para el caso de HortonWorks 3.0:
 
 HADOOP_HOME=/usr/hdp/current/hadoop-client
 HADOOP_CONF_DIR=/usr/hdp/current/hadoop-client/etc/hadoop/

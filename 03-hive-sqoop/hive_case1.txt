@@ -1,0 +1,89 @@
+# Universidad EAFIT
+# Curso ST0263 Tópicos Especiales en Telemática, 2019-1
+# Profesor: Edwin Montoya M. – emontoya@eafit.edu.co
+# Profesor: Alvaro Ospina - aeospinas@eafit.edu.co
+#
+# Scripts de HIVE
+#
+
+datos de conexión:
+
+Mysql
+IP: 192.168.10.80
+Database: retail_db
+Username: retail_dba
+Password: caoba
+
+importar datos via sqoop:
+
+$ sqoop import-all-tables --connect jdbc:mysql://192.168.10.80:3306/retail_db --username=retail_dba --password=caoba --hive-database emontoya  --hive-overwrite --warehouse-dir=/tmp/<username>/retail_db --hive-import --mysql-delimiters -m 1 
+
+-- CATEGORIAS MÁS POPULARES DE PRODUCTOS
+
+> SELECT c.category_name, count(order_item_quantity) as count
+FROM order_items oi
+inner join products p on oi.order_item_product_id = p.product_id
+inner join categories c on c.category_id = p.product_category_id
+group by c.category_name
+order by count desc
+limit 10;
+
+-- top 10 de productos que generan ganancias
+
+> SELECT p.product_id, p.product_name, r.revenue
+FROM products p inner join
+(select oi.order_item_product_id, sum(cast(oi.order_item_subtotal as float)) as revenue
+from order_items oi inner join orders o
+on oi.order_item_order_id = o.order_id
+where o.order_status <> 'CANCELED'
+and o.order_status <> 'SUSPECTED_FRAUD'
+group by order_item_product_id) r
+on p.product_id = r.order_item_product_id
+order by r.revenue desc
+limit 10;
+
+-- SUBIR LOS LOGS AL HDFS:
+$ hdfs dfs -put /datasets/case1/access.log /user/<username>/datasets/retail_logs/
+
+-- CREAR DIRECTORIO PARA TABLA EXTERNA CON ETL
+$ hdfs dfs -mkdir /user/<username>/warehouse/access_logs_etl
+
+
+> use <username>;
+> CREATE EXTERNAL TABLE tmp_access_logs (
+        ip STRING,
+        fecha STRING,
+        method STRING,
+        url STRING,
+        http_version STRING,
+        code1 STRING,
+        code2 STRING,
+        dash STRING,
+        user_agent STRING)
+    ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
+    WITH SERDEPROPERTIES (
+        'input.regex' = '([^ ]*) - - \\[([^\\]]*)\\] "([^\ ]*) ([^\ ]*) ([^\ ]*)" (\\d*) (\\d*) "([^"]*)" "([^"]*)"',
+        'output.format.string' = "%1$$s %2$$s %3$$s %4$$s %5$$s %6$$s %7$$s %8$$s %9$$s")
+    LOCATION '/datasets/case1/';
+
+> CREATE EXTERNAL TABLE etl_access_logs (
+        ip STRING,
+        fecha STRING,
+        method STRING,
+        url STRING,
+        http_version STRING,
+        code1 STRING,
+        code2 STRING,
+        dash STRING,
+        user_agent STRING)
+    ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+    LOCATION '/user/<username>/warehouse/access_logs_etl';
+
+> ADD JAR /usr/hdp/3.0.1.0-187/hive/lib/hive-contrib.jar;
+> INSERT OVERWRITE TABLE etl_access_logs SELECT * FROM tmp_access_logs;
+
+--- MUESTRE LOS PRODUCTOS MÁS VISITADOS
+
+> SELECT count(*) as contador,url FROM etl_access_logs
+WHERE url LIKE '%\/product\/%'
+GROUP BY url ORDER BY contador DESC LIMIT 10;
