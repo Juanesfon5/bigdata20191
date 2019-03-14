@@ -5,6 +5,10 @@
 
 # HIVE
 
+## LABORATORIO:
+
+[lab-hive-sqoop](lab-hive-sqoop.md)
+
 ## TABLAS SENCILLAS EN HIVE
 
 ## 1. Conexión al cluster Hadoop

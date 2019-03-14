@@ -5,6 +5,10 @@
 
 # Demo MapReduce en Java y Python con MRJOB
 
+# LABORATORIO:
+
+[lab-mrjob](lab-mrjob.md)
+
 # (1) WordCount en Java
 
 Tomado de: https://hadoop.apache.org/docs/r2.7.3/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html
